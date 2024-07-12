@@ -12,9 +12,11 @@ def fileToList(f):
     out = [x for x in out if len(x)]
     return out
 
-filter_list = set(fileToList("./splits/ignore_list.txt"))
-train_list = set(fileToList("./splits/crossmodal_train.txt"))
-test_list = set(fileToList("./splits/crossmodal_test.txt"))
+# 设置文件列表路径
+base_path = "C:\\Users\\Administrator\\Desktop\\yoyoDance\\data\\splits"
+filter_list = set(fileToList(os.path.join(base_path, "ignore_list.txt")))
+train_list = set(fileToList(os.path.join(base_path, "crossmodal_train.txt")))
+test_list = set(fileToList(os.path.join(base_path, "crossmodal_test.txt")))
 
 def split_data(dataset_path):
     # Check if motion and wav files exist
@@ -31,8 +33,8 @@ def split_data(dataset_path):
 
     # train - test split
     for split_list, split_name in zip([train_list, test_list], ["train", "test"]):
-        Path(f"{split_name}/motions").mkdir(parents=True, exist_ok=True)
-        Path(f"{split_name}/wavs").mkdir(parents=True, exist_ok=True)
+        Path(f"{dataset_path}/{split_name}/motions").mkdir(parents=True, exist_ok=True)
+        Path(f"{dataset_path}/{split_name}/wavs").mkdir(parents=True, exist_ok=True)
         for sequence in split_list:
             if sequence in filter_list:
                 continue
@@ -52,9 +54,9 @@ def split_data(dataset_path):
 
             # 处理新的键
             out_data = {"pos": trans, "q": pose, "scale": scale}
-            pickle.dump(out_data, open(f"{split_name}/motions/{sequence}.pkl", "wb"))
-            shutil.copyfile(wav, f"{split_name}/wavs/{sequence}.wav")
+            pickle.dump(out_data, open(f"{dataset_path}/{split_name}/motions/{sequence}.pkl", "wb"))
+            shutil.copyfile(wav, f"{dataset_path}/{split_name}/wavs/{sequence}.wav")
 
 if __name__ == "__main__":
-    dataset_folder = "C:/Users/Administrator/Desktop/PhantomDanceDatav1.1"
+    dataset_folder = "C:/Users/Administrator/Desktop/yoyodance_DATA"
     split_data(dataset_folder)

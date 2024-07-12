@@ -5,6 +5,7 @@ from pathlib import Path
 import librosa
 import librosa as lr
 import numpy as np
+import scipy.signal
 from tqdm import tqdm
 
 FPS = 30
@@ -85,7 +86,6 @@ def extract(fpath, skip_completed=True, dest_dir="aist_baseline_feats"):
     audio_feature = audio_feature[:5 * FPS]
     assert (audio_feature.shape[0] - 5 * FPS) == 0, f"expected output to be ~5s, but was {audio_feature.shape[0] / FPS}"
 
-    #np.save(save_path, audio_feature)
     return audio_feature, save_path
 
 
